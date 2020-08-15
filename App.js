@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,11 +12,13 @@ import {
   Image,
   ImageBackground,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import Constants from "expo-constants";
 import { NavigationContainer } from "@react-navigation/native";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AppLoading } from "expo";
 
 const Stack = createStackNavigator();
 const localhost = "https://daad8c99e450.ngrok.io/";
@@ -404,20 +406,54 @@ function LoadingScreen({ navigation, endUrl }) {
   );
 }
 
-function ArticleList({ navigation, endUrl }) {
-  useEffect(() => {
-    fetch(localhost + "/" + endUrl).then((res) =>
-      res.json().then((data) => {
-        this.title = data.title;
-        this.image = data.image;
-        this.link = data.link;
-        console.log("everything");
-        console.log(this.image);
-      })
-    );
-  });
+class ArticleList extends Component {
+  state = {
+    isReady: false,
+  };
 
-  return <Button title={"STI{O"} onPress={() => navigation.navigate("Home")} />;
+  loadAPI = async () => {
+    const localhost = "https://f2cdc69ed8c9.ngrok.io";
+    console.log("sup");
+    let res = await fetch(localhost + "/" + this.props.endURL);
+    let data = await res.json();
+    this.title = data.title;
+    this.link = data.link;
+    this.image = data.image;
+    console.log(this.link);
+    console.log("success");
+    this.setState({ isLoading: false });
+  };
+
+  render() {
+    if (!this.state.isReady) {
+      return (
+        <AppLoading
+          startAsync={this.loadAPI}
+          onFinish={() => this.setState({ isReady: true })}
+          onError={console.warn}
+        />
+      );
+    }
+
+    return (
+      <View>
+        <Button title={"STI{O"} onPress={() => navigation.navigate("Home")} />
+        <TouchableOpacity
+          style={articleStyles.container}
+          onPress={() => {
+            console.log(this.link);
+            Linking.OpenURL(this.link);
+          }}
+        >
+          <Text style={articleStyles.text}>{this.title}</Text>
+          <ImageBackground
+            source={{ uri: this.image }}
+            style={articleStyles.image}
+          ></ImageBackground>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
