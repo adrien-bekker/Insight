@@ -13,17 +13,22 @@ import {
   ImageBackground,
   Button,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import Constants from "expo-constants";
 import { NavigationContainer } from "@react-navigation/native";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AppLoading } from "expo";
+import Geocoder from "react-native-geocoding";
+import * as Permissions from "expo-permissions";
+import * as Location from "expo-location";
 
+let latitude, longitude;
 let url = "HI";
 const Stack = createStackNavigator();
+let location = "";
 
-var isLoaded;
 const App = () => {
   return (
     <NavigationContainer>
@@ -37,7 +42,38 @@ const App = () => {
 };
 
 class HomeScreen extends Component {
+  state = { errorMessage: " " };
+
+  componentDidMount() {
+    this.getLocation();
+  }
+
+  getLocation = async () => {
+    Geocoder.init("AIzaSyC9KDkw1L9uwMacnF6KRK-_C-CwbTSP6XA");
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission not granted",
+      });
+    }
+
+    location = await Location.getCurrentPositionAsync();
+
+    this.setState({
+      location: location,
+    });
+  };
+
   render() {
+    function getLatitude() {
+      return location.coords.latitude;
+    }
+
+    function getLongitude() {
+      return location.coords.longitude;
+    }
+
     return (
       <ScrollView>
         <SafeAreaView>
@@ -71,7 +107,21 @@ class HomeScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity //localnews
                 onPress={() => {
-                  url = "localnews";
+                  url =
+                    "localnews/" +
+                    location.coords.latitude
+                      .toString()
+                      .substring(
+                        0,
+                        location.coords.latitude.toString().indexOf(".") + 1
+                      ) +
+                    "," +
+                    location.coords.longitude
+                      .toString()
+                      .substring(
+                        0,
+                        location.coords.longitude.toString().indexOf(".") + 1
+                      );
                   this.props.navigation.navigate("Articles");
                 }}
               >
@@ -442,21 +492,6 @@ class HomeScreen extends Component {
   }
 }
 
-/*function LoadingScreen({ navigation, endUrl }) {
-  useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate("Home", endUrl);
-      navigation.navigate("Articles", endUrl);
-    }, 15000);
-  });
-
-  return (
-    <View style={styles.loadingview}>
-      <Text style={styles.loading}>{"Loading..."}</Text>
-      <Text style={styles.loading}>{"This may take a while."}</Text>
-    </View>
-  );
-}*/
 function getURL() {
   return url;
 }
@@ -470,15 +505,13 @@ class ArticleList extends Component {
   };
 
   loadAPI = async () => {
-    const localhost = "https://e3d5f17e05b1.ngrok.io";
-    console.log(localhost + "/" + getURL());
+    <ActivityIndicator> </ActivityIndicator>;
+    const localhost = "https://d943db2c6405.ngrok.io";
     let res = await fetch(localhost + "/" + getURL());
     let data = await res.json();
     this.title = data.title;
     this.link = data.link;
     this.image = data.image;
-    console.log(this.link);
-    console.log("success");
     this.setState({ isLoading: false });
   };
 
@@ -494,11 +527,10 @@ class ArticleList extends Component {
     }
 
     return (
-      <View>
+      <View style={articleStyles.fullArticle}>
         <TouchableOpacity
           style={articleStyles.container}
           onPress={() => {
-            console.log(this.link);
             Linking.openURL(this.link);
           }}
         >
@@ -507,6 +539,7 @@ class ArticleList extends Component {
             source={{ uri: this.image }}
             style={articleStyles.image}
           ></ImageBackground>
+          <Text style={articleStyles.text}> </Text>
         </TouchableOpacity>
       </View>
     );
@@ -526,7 +559,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "blue",
     opacity: 0.75,
-    fontFamily: "Trebuchet MS",
+    fontFamily: Platform.OS === "ios" ? "Trebuchet MS" : "serif",
   },
   title: {
     fontSize: 20,
@@ -537,7 +570,7 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     padding: 30,
     textAlign: "center",
-    fontFamily: "Trebuchet MS",
+    fontFamily: Platform.OS === "ios" ? "Trebuchet MS" : "serif",
     flexWrap: "wrap",
   },
   longtitle: {
@@ -549,7 +582,7 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     padding: 20,
     textAlign: "center",
-    fontFamily: "Trebuchet MS",
+    fontFamily: Platform.OS === "ios" ? "Trebuchet MS" : "serif",
   },
   moreopaque: {
     fontSize: 20,
@@ -560,7 +593,7 @@ const styles = StyleSheet.create({
     opacity: 0.85,
     padding: 30,
     textAlign: "center",
-    fontFamily: "Trebuchet MS",
+    fontFamily: Platform.OS === "ios" ? "Trebuchet MS" : "serif",
     flexWrap: "wrap",
   },
   column: {
@@ -568,17 +601,6 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-  },
-  loading: {
-    fontSize: 32,
-    backgroundColor: "darkblue",
-    padding: 20,
-    textAlign: "center",
-    color: "#fff",
-    fontFamily: "Trebuchet MS",
-  },
-  loadingview: {
-    padding: 10,
   },
   logo: {
     height: 200,
@@ -591,14 +613,24 @@ const articleStyles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    height: 200,
-    width: 200,
-    padding: 5,
+    height: 300,
+    width: 300,
     alignSelf: "center",
+    fontFamily: Platform.OS === "ios" ? "Trebuchet MS" : "serif",
   },
   text: {
-    fontSize: 20,
+    fontSize: 25,
     textAlign: "center",
+    fontFamily: Platform.OS === "ios" ? "Trebuchet MS" : "serif",
+    color: "blue",
+    padding: 10,
+  },
+  fullArticle: {
+    backgroundColor: "rgb(32, 179, 90)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: Platform.OS === "ios" ? "10" : 0,
+    top: Platform.OS === "ios" ? "10%" : "2%",
   },
 });
 
