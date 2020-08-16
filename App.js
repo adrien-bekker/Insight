@@ -315,7 +315,7 @@ class HomeScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity //programming
                 onPress={() => {
-                  url = "programming";
+                  url = "computerscience";
                   this.props.navigation.navigate("Articles");
                 }}
               >
