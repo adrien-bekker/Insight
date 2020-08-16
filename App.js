@@ -20,8 +20,8 @@ import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AppLoading } from "expo";
 
+let url = "HI"
 const Stack = createStackNavigator();
-const localhost = "https://daad8c99e450.ngrok.io/";
 
 var isLoaded;
 const App = () => {
@@ -29,15 +29,16 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Loading Screen" component={LoadingScreen} />
+        
         <Stack.Screen name="Articles" component={ArticleList} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-function HomeScreen({ navigation }) {
-  return (
+class HomeScreen extends Component {
+  render() {
+    return (
     <ScrollView>
       <SafeAreaView>
         <View>
@@ -52,10 +53,11 @@ function HomeScreen({ navigation }) {
         <Text style={styles.header}>{"General News"}</Text>
         <View style={styles.sidebyside}>
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "globalnews")
-              }
+            <TouchableOpacity //global news
+              onPress={() => {
+              url = "globalnews";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -67,8 +69,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.title}>{"Global News"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "localnews")}
+            <TouchableOpacity //localnews
+              onPress={() => {
+              url = "localnews";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -80,8 +85,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.moreopaque}>{"Local News"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "weather")}
+            <TouchableOpacity //weather
+              onPress={() => {
+              url = "weather";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -96,10 +104,11 @@ function HomeScreen({ navigation }) {
           </View>
 
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "nationalnews")
-              }
+            <TouchableOpacity //national news
+              onPress={() => {
+              url = "nationalnews";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -111,8 +120,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.title}>{"National News"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "covidnews")}
+            <TouchableOpacity //covidnews
+             onPress={() => { 
+              url = "covidnews";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -124,8 +136,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.title}>{"COVID-19 News"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "education")}
+            <TouchableOpacity //education
+              onPress={() => {
+              url = "education";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -143,10 +158,11 @@ function HomeScreen({ navigation }) {
         <Text style={styles.header}>{"Positivity"}</Text>
         <View style={styles.sidebyside}>
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "meditation")
-              }
+            <TouchableOpacity //meditation
+              onPress={() => {
+              url = "meditation";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -158,8 +174,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.moreopaque}>{"Meditation"}</Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "workout")}
+            <TouchableOpacity //workout
+              onPress={() => {
+              url = "workout";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -174,10 +193,11 @@ function HomeScreen({ navigation }) {
           </View>
 
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "healthyfood")
-              }
+            <TouchableOpacity //healthyfood
+              onPress={() => {
+              url = "healthyfood";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -189,10 +209,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.title}>{"Healthy Food"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "positivenews")
-              }
+            <TouchableOpacity //positivenews
+              onPress={() => {
+              url = "positivenews";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -210,8 +231,11 @@ function HomeScreen({ navigation }) {
         <Text style={styles.header}>{"Science and Technology"}</Text>
         <View style={styles.sidebyside}>
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "biology")}
+            <TouchableOpacity //biology
+              onPress={() => {
+              url = "biology";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -223,8 +247,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.title}>{"Biology"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "climate")}
+            <TouchableOpacity //climate
+              onPress={() => {
+              url = "climate";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -236,10 +263,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.title}>{"Climate"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "programming")
-              }
+            <TouchableOpacity //programming
+              onPress={() => {
+              url = "programming";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -251,8 +279,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.longtitle}>{"Programming"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "astronomy")}
+            <TouchableOpacity //astronomy
+              onPress={() => {
+              url = "astronomy";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -267,8 +298,11 @@ function HomeScreen({ navigation }) {
           </View>
 
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "chemistry")}
+            <TouchableOpacity //chemistry
+              onPress={() => {
+              url = "chemistry";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -280,8 +314,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.moreopaque}>{"Chemistry"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "robotics")}
+            <TouchableOpacity //robotics
+              onPress={() => { 
+              url = "robotics";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -293,10 +330,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.moreopaque}>{"Robotics"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "engineering")
-              }
+            <TouchableOpacity //engineering
+              onPress={() => {
+              url = "engineering";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -308,8 +346,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.longtitle}>{"Engineering"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "medicine")}
+            <TouchableOpacity //medicine
+              onPress={() => {
+              url = "medicine";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -327,8 +368,11 @@ function HomeScreen({ navigation }) {
         <Text style={styles.header}>{"Entertainment"}</Text>
         <View style={styles.sidebyside}>
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "movies/tv")}
+            <TouchableOpacity //movies and tv
+              onPress={() => {
+              url = "moviesandtv";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -340,8 +384,11 @@ function HomeScreen({ navigation }) {
                 <Text style={styles.moreopaque}>{"Movies/TV"} </Text>
               </ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "music")}
+            <TouchableOpacity //music
+               onPress={() => {
+              url = "music";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -355,8 +402,11 @@ function HomeScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.column}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Loading Screen", "sports")}
+            <TouchableOpacity //sports
+              onPress={() => {
+              url = "sports";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -369,9 +419,10 @@ function HomeScreen({ navigation }) {
               </ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Loading Screen", "videogames")
-              }
+              onPress={() => {
+              url = "videogames";
+              this.props.navigation.navigate("Articles");
+              }}
             >
               <ImageBackground
                 style={styles.image}
@@ -385,12 +436,14 @@ function HomeScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+        
       </SafeAreaView>
     </ScrollView>
   );
 }
+}
 
-function LoadingScreen({ navigation, endUrl }) {
+/*function LoadingScreen({ navigation, endUrl }) {
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate("Home", endUrl);
@@ -404,17 +457,24 @@ function LoadingScreen({ navigation, endUrl }) {
       <Text style={styles.loading}>{"This may take a while."}</Text>
     </View>
   );
+}*/
+function getURL() {
+  return (url);
 }
-
 class ArticleList extends Component {
+  constructor(props)
+  {
+    super(props);
+    const params = this.props.navigation.state;
+  }
   state = {
     isReady: false,
   };
 
   loadAPI = async () => {
-    const localhost = "https://f2cdc69ed8c9.ngrok.io";
-    console.log("sup");
-    let res = await fetch(localhost + "/" + this.props.endURL);
+    const localhost = "https://e3d5f17e05b1.ngrok.io";
+    console.log(localhost + "/" + getURL());
+    let res = await fetch(localhost + "/" + getURL());
     let data = await res.json();
     this.title = data.title;
     this.link = data.link;
@@ -437,7 +497,6 @@ class ArticleList extends Component {
 
     return (
       <View>
-        <Button title={"STI{O"} onPress={() => navigation.navigate("Home")} />
         <TouchableOpacity
           style={articleStyles.container}
           onPress={() => {
@@ -469,10 +528,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "blue",
     opacity: 0.75,
-    fontFamily: "Avenir",
+    fontFamily: "Trebuchet MS",
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     backgroundColor: "#fff",
     color: "teal",
     width: "100%",
@@ -480,10 +539,11 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     padding: 30,
     textAlign: "center",
-    fontFamily: "Avenir-Roman",
+    fontFamily: "Trebuchet MS",
+    flexWrap: "wrap"
   },
   longtitle: {
-    fontSize: 22,
+    fontSize: 20,
     backgroundColor: "#fff",
     color: "teal",
     width: "100%",
@@ -491,10 +551,10 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     padding: 20,
     textAlign: "center",
-    fontFamily: "Avenir-Roman",
+    fontFamily: "Trebuchet MS",
   },
   moreopaque: {
-    fontSize: 22,
+    fontSize: 20,
     backgroundColor: "#fff",
     color: "teal",
     width: "100%",
@@ -502,7 +562,8 @@ const styles = StyleSheet.create({
     opacity: 0.85,
     padding: 30,
     textAlign: "center",
-    fontFamily: "Avenir-Roman",
+    fontFamily: "Trebuchet MS",
+    flexWrap: "wrap"
   },
   column: {
     width: "50%",
@@ -516,7 +577,7 @@ const styles = StyleSheet.create({
     padding: 20,
     textAlign: "center",
     color: "#fff",
-    fontFamily: "Avenir",
+    fontFamily: "Trebuchet MS",
   },
   loadingview: {
     padding: 10,
@@ -526,5 +587,22 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
+
+const articleStyles = StyleSheet.create({
+  container: {
+    justifyContent: "center"
+  },
+  image: {
+    height: 200,
+    width: 200,
+    padding: 5,
+    alignSelf: "center"
+  },
+  text: {
+    fontSize: 20,
+    textAlign: "center"
+  }
+
+})
 
 export default App;
