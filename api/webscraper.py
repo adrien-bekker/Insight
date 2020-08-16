@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 
 main = Blueprint("main", __name__)
 
@@ -19,16 +20,20 @@ def globalNews():
     driver = webdriver.Chrome(PATH, options=option)
 
     # Goes to link
-    driver.get("https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US%3Aen")
+    driver.get("https://www.cnn.com/world")
 
     try:
         article = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz/div/div[2]/c-wiz/div/ div[2]/div/main/c-wiz/div/div/main/div[1]/div[1]/div/div/article/h3/a")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/section[1]/div[2]/div/div[1]/ul/li[1]/article/div/div[2]/h3/a/span[1]")
                                            ))
+        link = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "/html/body/div[7]/section[1]/div[2]/div/div[1]/ul/li[1]/article/div/div[2]/h3/a"))
+        )
         image = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz/div/div[2]/c-wiz/div/div[2]/div/main/c-wiz/div/div/main/div[1]/div[1]/div/div/a/figure/img")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/section[1]/div[2]/div/div[1]/ul/li[1]/article/div/div[1]/a/img")
                                            ))
-        return jsonify({"title": article.text, "link": article.get_attribute("href"), "image": image.get_attribute("src")})
+        return jsonify({"title": article.text, "link": link.get_attribute("href"), "image": image.get_attribute("src")})
     finally:
         driver.quit()
 
@@ -41,36 +46,59 @@ def nationalNews():
     driver = webdriver.Chrome(PATH)
 
     # Goes to link
-    driver.get("https://news.google.com/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNRGxqTjNjd0VnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen")
+    driver.get("https://www.cnn.com/us")
 
     try:
         article = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz/div/div[2]/c-wiz/div/ div[2]/div/main/c-wiz/div/div/main/div[1]/div[1]/div/div/article/h3/a")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[8]/section[1]/div[2]/div/div[1]/ul/li[1]/article/div/div[2]/h3/a/span[1]")
                                            ))
+        link = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "/html/body/div[8]/section[1]/div[2]/div/div[1]/ul/li[1]/article/div/div[1]/a"))
+        )
         image = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz/div/div[2]/c-wiz/div/div[2]/div/main/c-wiz/div/div/main/div[1]/div[1]/div/div/a/figure/img")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[8]/section[1]/div[2]/div/div[1]/ul/li[1]/article/div/div[1]/a/img")
                                            ))
-        return jsonify({"title": article.text, "link": article.get_attribute("href"), "image": image.get_attribute("src")})
+        return jsonify({"title": article.text, "link": link.get_attribute("href"), "image": image.get_attribute("src")})
     finally:
         driver.quit()
 
 
-@main.route("/localnews")
-def localNews():
+@main.route("/localnews/<coords>")
+def localNews(coords):
 
     # Location of chrome web driver
     PATH = "D:\chromedriver_win32\chromedriver.exe"
     driver = webdriver.Chrome(PATH)
 
-    # Goes to link
-    driver.get("https://news.google.com/topics/CAAqHAgKIhZDQklTQ2pvSWJHOWpZV3hmZGpJb0FBUAE/sections/CAQiTkNCSVNORG9JYkc5allXeGZkakpDRUd4dlkyRnNYM1l5WDNObFkzUnBiMjV5Q2hJSUwyMHZNSGgwTkd0NkNnb0lMMjB2TUhoME5Hc29BQSowCAAqLAgKIiZDQklTRmpvSWJHOWpZV3hmZGpKNkNnb0lMMjB2TUhoME5Hc29BQVABUAE?hl=en-US&gl=US&ceid=US%3Aen")
-
     try:
+        # Goes to link
+        driver.get(f"https://www.google.com/maps/search/{coords}/")
+
+        # Grabs user location
+        location = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "/html/body/jsl/div[3]/div[9]/div[8]/div/div[1]/div/div/div[8]/div/div[1]/span[3]/span[3]"))
+        )
+
+        location = location.text
+
+        # Goes to link
+        driver.get("https://news.yahoo.com/")
+
+        # Gets news from their location
+        search = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "/html/body/div[1]/div/div[1]/div/div[1]/div[1]/div/div/div/div/div/div/div[2]/div/div[2]/form/table/tbody/tr/td[1]/div/div/div[1]/input"))
+        )
+
+        search.send_keys(location, Keys.ENTER)
+
         article = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz[2]/div/div[2]/c-wiz/div/div[2]/div[2]/span[1]/div/div/main/c-wiz/div/div/main/div[1]/div[1]/div/article/h3/a")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[3]/div/div/div[1]/div/div/div/div/ol/li[1]/div/ul/li/h4/a")
                                            ))
         image = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz[2]/div/div[2]/c-wiz/div/div[2]/div[2]/span[1]/div/div/main/c-wiz/div/div/main/div[1]/div[1]/a/figure/img")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[3]/div/div/div[1]/div/div/div/div/ol/li[1]/div/ul/li/a/img")
                                            ))
         return jsonify({"title": article.text, "link": article.get_attribute("href"), "image": image.get_attribute("src")})
     finally:
@@ -85,14 +113,14 @@ def covidNews():
     driver = webdriver.Chrome(PATH)
 
     # Goes to link
-    driver.get("https://news.google.com/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNREZqY0hsNUVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen")
+    driver.get("https://abcnews.go.com/Health/Coronavirus")
 
     try:
         article = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz/div/div[2]/c-wiz/div/div[2]/div[2]/span[1]/div/div/main/c-wiz/div/div/main/div[1]/div[1]/div/div[2]/article[1]/h3/a")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/main/div[3]/div[1]/div/div/div[2]/a")
                                            ))
         image = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/c-wiz/div/div[2]/c-wiz/div/div[2]/div[2]/span[1]/div/div/main/c-wiz/div/div/main/div[1]/div[1]/div/div[2]/article[1]/figure/img")
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/main/div[3]/div[1]/a/figure[1]/div[2]/img")
                                            ))
         return jsonify({"title": article.text, "link": article.get_attribute("href"), "image": image.get_attribute("src")})
     finally:
